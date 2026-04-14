@@ -1,12 +1,3 @@
-﻿### 1. DECOMPOSE
-* **Sub-problem A:** Identify the specific dependencies and tools we set up during this session.
-* **Sub-problem B:** Document the exact, successful terminal commands used to install and run them.
-* **Sub-problem C:** Format this information into a clean, copy-pasteable Markdown block suitable for your project's `README.md`.
-
----
-
-### 2. SOLVE
-
 * **Step 1: Identify Dependencies**
     * GitHub CLI (`gh`) - Pre-installed in Codespaces.
     * GitHub Copilot CLI Extension (`github/gh-copilot`).
