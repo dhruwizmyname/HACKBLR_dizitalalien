@@ -37,3 +37,23 @@ If you try to run the setup and get a port allocation error, a previous containe
 docker rm -f $(docker ps -aq)
 
 ```
+** Manual Qdrant Start **
+
+Docker: "Port is already allocated" or "Bind for 0.0.0.0:6333 failed"
+If you try to run the setup and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
+
+** Docker: "Port is already allocated" or "Bind for 0.0.0.0:6333 failed" **
+
+If you try to run the setup and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
+
+** BASH **
+```
+docker run -d \
+  --name hackblr-qdrant \
+  -p 6333:6333 \
+  -p 6334:6334 \
+  -v $(pwd)/qdrant_storage:/qdrant/storage:z \
+  qdrant/qdrant
+
+```
+
