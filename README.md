@@ -1,78 +1,39 @@
-* **Step 1: Identify Dependencies**
-    * GitHub CLI (`gh`) - Pre-installed in Codespaces.
-    * GitHub Copilot CLI Extension (`github/gh-copilot`).
-    * Docker - Pre-installed in Codespaces.
-    * Qdrant Vector Database (`qdrant/qdrant` Docker image).
-    * *Confidence: 1.0*
-
-* **Step 2: Document Steps**
-    * **Copilot CLI:** `gh extension install github/gh-copilot`
-    * **Troubleshooting Ghost Ports:** `docker rm -f $(docker ps -aq)`
-    * **Running Qdrant with persistence:** `docker run -d -p 6333:6333 -p 6334:6334 -v $(pwd)/qdrant_storage:/qdrant/storage:z qdrant/qdrant`
-    * *Confidence: 1.0*
-
-* **Step 3: Markdown Formatting**
-    * Organize into clear headings (Prerequisites, Tools, Database Setup, Troubleshooting).
-    * *Confidence: 1.0*
-
----
-
-### 3. VERIFY
-* **Logic:** The steps follow a logical progression for a new developer entering the Codespace: setting up helpful tooling first, then setting up the core database, and providing a troubleshooting step if things go wrong.
-* **Completeness:** Captures both the Qdrant database syntax and the GitHub Copilot CLI tool you configured. 
-* **Bias/Clarity:** The tone is instructive and clear for any new contributor joining the repository.
-
----
-
-### 4. SYNTHESIZE
-
-Here is the Markdown snippet. You can copy and paste this directly into your `README.md` file, right below your team's branching strategy:
-
-```markdown
 ## 🚀 Codespace Setup & Installation Guide
 
-When launching this project in a GitHub Codespace, follow these steps to set up your environment dependencies and local database.
+We have automated the environment setup process. When launching this project locally or in a GitHub Codespace, follow these steps to initialize your dependencies and local database.
 
-### Prerequisites & Dependencies
-* **Docker:** (Pre-installed in GitHub Codespaces)
-* **GitHub CLI (`gh`):** (Pre-installed in GitHub Codespaces)
-* **Qdrant Vector Database:** Run locally via Docker
-* **GitHub Copilot CLI:** For terminal AI assistance
+### Prerequisites 
+* **Docker:** Pre-installed in GitHub Codespaces. Ensure Docker Desktop is running if you are working locally.
+* **GitHub CLI (`gh`):** Pre-installed in GitHub Codespaces.
 
 ---
 
-### Step 1: Install Terminal Tooling (Optional but Recommended)
-If you want to use GitHub Copilot directly in your terminal to explain or suggest commands, install the extension:
+### Step 1: Run the Automated Setup Script
+Instead of manually installing dependencies, run our idempotent setup script. It will intelligently check your environment and only install or start what is missing.
+
+**For Mac/Linux/Codespaces:**
 ```bash
-gh extension install github/gh-copilot
+chmod +x scripts/setup_codespace.sh
+./scripts/setup_codespace.sh
 ```
 
-### Step 2: Set Up Qdrant (Vector Database)
-We use Qdrant for our vector storage. To spin up the database and ensure your data persists across Codespace sessions, run the following Docker command:
-
-```bash
-docker run -d \
-  -p 6333:6333 \
-  -p 6334:6334 \
-  -v $(pwd)/qdrant_storage:/qdrant/storage:z \
-  qdrant/qdrant
+**For windows:**
+DOS
 ```
-*Note: The `-v` flag maps the container's storage to our local `qdrant_storage` folder so data is not lost when the container stops.*
+scripts\setup_codespace.bat
+```
 
-### 🛠 Troubleshooting
+** 🛠 Troubleshooting & Manual Fallback **
 
-**"Port is already allocated" or "Bind for 0.0.0.0:6333 failed"**
-If you try to run Qdrant and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
-```bash
+Docker: "Port is already allocated" or "Bind for 0.0.0.0:6333 failed"
+If you try to run the setup and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
+
+** Docker: "Port is already allocated" or "Bind for 0.0.0.0:6333 failed" **
+
+If you try to run the setup and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
+
+** BASH **
+```
 docker rm -f $(docker ps -aq)
+
 ```
-*Warning: This will stop and remove all currently running Docker containers in your environment. Run your Qdrant setup command again after clearing.*
-```
-
----
-
-### 5. REFLECT
-* **Overall Confidence:** 0.98
-* **Assessment:** This structure directly addresses everything we worked through and provides a robust, easy-to-read guide for the rest of your team. 
-
-Do you have any other microservices (like a Python backend or Node server) that you'd like me to append to this installation guide?
