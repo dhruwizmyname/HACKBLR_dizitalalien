@@ -1,57 +1,87 @@
-﻿# HACKBLR_dizitalalien
-To structure this information clearly for your team in the `README.md`, I will apply your requested problem-solving framework.
-
-### 1. DECOMPOSE
-* **Sub-problem A:** Define the core hierarchy of the permanent branches (`main`, `prod`, `dev`, `test`).
-* **Sub-problem B:** Define the individual contributor branches (`dhruw`, `shashi`, `nikhil`).
-* **Sub-problem C:** Format the content using Markdown for maximum readability on GitHub.
+﻿### 1. DECOMPOSE
+* **Sub-problem A:** Identify the specific dependencies and tools we set up during this session.
+* **Sub-problem B:** Document the exact, successful terminal commands used to install and run them.
+* **Sub-problem C:** Format this information into a clean, copy-pasteable Markdown block suitable for your project's `README.md`.
 
 ---
 
 ### 2. SOLVE
-* **A. Infrastructure Branches:** Organize them by environment/stability level.
+
+* **Step 1: Identify Dependencies**
+    * GitHub CLI (`gh`) - Pre-installed in Codespaces.
+    * GitHub Copilot CLI Extension (`github/gh-copilot`).
+    * Docker - Pre-installed in Codespaces.
+    * Qdrant Vector Database (`qdrant/qdrant` Docker image).
     * *Confidence: 1.0*
-* **B. Team Branches:** List these as personal workspaces to avoid merge conflicts in shared branches.
+
+* **Step 2: Document Steps**
+    * **Copilot CLI:** `gh extension install github/gh-copilot`
+    * **Troubleshooting Ghost Ports:** `docker rm -f $(docker ps -aq)`
+    * **Running Qdrant with persistence:** `docker run -d -p 6333:6333 -p 6334:6334 -v $(pwd)/qdrant_storage:/qdrant/storage:z qdrant/qdrant`
     * *Confidence: 1.0*
-* **C. Formatting:** Use a list or a table to make it "scannable" at a glance.
-    * *Confidence: 0.95*
+
+* **Step 3: Markdown Formatting**
+    * Organize into clear headings (Prerequisites, Tools, Database Setup, Troubleshooting).
+    * *Confidence: 1.0*
 
 ---
 
 ### 3. VERIFY
-* **Logic:** Does the flow make sense? Yes, starting with the source of truth (`main`) and moving to individuals.
-* **Completeness:** Are all names and branches included? Yes.
-* **Bias:** The tone is neutral and professional.
+* **Logic:** The steps follow a logical progression for a new developer entering the Codespace: setting up helpful tooling first, then setting up the core database, and providing a troubleshooting step if things go wrong.
+* **Completeness:** Captures both the Qdrant database syntax and the GitHub Copilot CLI tool you configured. 
+* **Bias/Clarity:** The tone is instructive and clear for any new contributor joining the repository.
 
 ---
 
 ### 4. SYNTHESIZE
-Based on the verification, here is the content you should paste into your `README.md`:
 
-## 🌿 Branching Strategy
+Here is the Markdown snippet. You can copy and paste this directly into your `README.md` file, right below your team's branching strategy:
 
-To maintain a clean workflow, we are following this branch structure:
+```markdown
+## 🚀 Codespace Setup & Installation Guide
 
-### Core Pipeline
-* **`main`**: The primary source of truth.
-* **`prod`**: Production-ready code.
-* **`dev`**: Main integration branch for ongoing development.
-* **`test`**: Branch for QA and testing cycles.
+When launching this project in a GitHub Codespace, follow these steps to set up your environment dependencies and local database.
 
-### Team Workspaces
-These branches are designated for individual contributions:
-* **`dhruw`**
-* **`shashi`**
-* **`nikhil`**
+### Prerequisites & Dependencies
+* **Docker:** (Pre-installed in GitHub Codespaces)
+* **GitHub CLI (`gh`):** (Pre-installed in GitHub Codespaces)
+* **Qdrant Vector Database:** Run locally via Docker
+* **GitHub Copilot CLI:** For terminal AI assistance
 
-> **Note:** Please ensure you pull the latest changes from `dev` before pushing to your individual branches to keep everything synchronized.
+---
+
+### Step 1: Install Terminal Tooling (Optional but Recommended)
+If you want to use GitHub Copilot directly in your terminal to explain or suggest commands, install the extension:
+```bash
+gh extension install github/gh-copilot
+```
+
+### Step 2: Set Up Qdrant (Vector Database)
+We use Qdrant for our vector storage. To spin up the database and ensure your data persists across Codespace sessions, run the following Docker command:
+
+```bash
+docker run -d \
+  -p 6333:6333 \
+  -p 6334:6334 \
+  -v $(pwd)/qdrant_storage:/qdrant/storage:z \
+  qdrant/qdrant
+```
+*Note: The `-v` flag maps the container's storage to our local `qdrant_storage` folder so data is not lost when the container stops.*
+
+### 🛠 Troubleshooting
+
+**"Port is already allocated" or "Bind for 0.0.0.0:6333 failed"**
+If you try to run Qdrant and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
+```bash
+docker rm -f $(docker ps -aq)
+```
+*Warning: This will stop and remove all currently running Docker containers in your environment. Run your Qdrant setup command again after clearing.*
+```
 
 ---
 
 ### 5. REFLECT
 * **Overall Confidence:** 0.98
-* **Assessment:** The solution is concise and fits the GitHub environment perfectly. No further iterations are required.
+* **Assessment:** This structure directly addresses everything we worked through and provides a robust, easy-to-read guide for the rest of your team. 
 
-Since you are currently in the [GitHub editor](https://github.com/dhruwizmyname/HACKBLR_dizitalalien/edit/main/README.md), you can simply copy and paste the section above into the text area. 
-
-Do you want to add specific rules for how the team should merge their personal branches into `dev`?
+Do you have any other microservices (like a Python backend or Node server) that you'd like me to append to this installation guide?

@@ -1,0 +1,5 @@
+{
+  "name": "HACKBLR_dizitalalien",
+  "postCreateCommand": "bash scripts/setup_codespace.sh",
+  "postStartCommand": "bash scripts/setup_codespace.sh --skip-pip --skip-gh"
+}
