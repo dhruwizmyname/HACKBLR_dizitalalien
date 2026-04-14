@@ -57,3 +57,13 @@ docker run -d \
 
 ```
 
+
+
+├── scripts/
+│   ├── setup_codespace.sh   # Automated setup for Linux/Mac
+│   └── setup_codespace.bat  # Automated setup for Windows
+├── qdrant_storage/          # Persistent Qdrant volume (Ignored by Git)
+├── core_integration.py      # Phase 1: Qdrant read/write testing script
+├── requirements.txt         # Python package dependencies
+├── .gitignore               # Standard ignore file for venv, cache, and env vars
+└── README.md                # Project documentation
