@@ -2,6 +2,16 @@
 
 We have automated the environment setup process. When launching this project locally or in a GitHub Codespace, follow these steps to initialize your dependencies and local database.
 
+
+**├── scripts/
+│   ├── setup_codespace.sh   # Automated setup for Linux/Mac
+│   └── setup_codespace.bat  # Automated setup for Windows
+├── qdrant_storage/          # Persistent Qdrant volume (Ignored by Git)
+├── core_integration.py      # Phase 1: Qdrant read/write testing script
+├── requirements.txt         # Python package dependencies
+├── .gitignore               # Standard ignore file for venv, cache, and env vars
+└── README.md                # Project documentation**
+
 ### Prerequisites 
 * **Docker:** Pre-installed in GitHub Codespaces. Ensure Docker Desktop is running if you are working locally.
 * **GitHub CLI (`gh`):** Pre-installed in GitHub Codespaces.
@@ -59,11 +69,3 @@ docker run -d \
 
 
 
-├── scripts/
-│   ├── setup_codespace.sh   # Automated setup for Linux/Mac
-│   └── setup_codespace.bat  # Automated setup for Windows
-├── qdrant_storage/          # Persistent Qdrant volume (Ignored by Git)
-├── core_integration.py      # Phase 1: Qdrant read/write testing script
-├── requirements.txt         # Python package dependencies
-├── .gitignore               # Standard ignore file for venv, cache, and env vars
-└── README.md                # Project documentation
