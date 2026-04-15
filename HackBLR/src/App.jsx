@@ -1,120 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useState, useEffect, useMemo } from 'react'
+import VapiWeb from '@vapi-ai/web'
 import './App.css'
 
+// Handle case where Vapi might be exported as .default or the module itself
+const Vapi = typeof VapiWeb === 'function' ? VapiWeb : (VapiWeb.default || VapiWeb);
+
 function App() {
-  const [count, setCount] = useState(0)
+  const vapi = useMemo(() => {
+    try {
+      console.log('Initializing Vapi with:', import.meta.env.VITE_VAPI_PUBLIC_KEY);
+      return new Vapi(import.meta.env.VITE_VAPI_PUBLIC_KEY);
+    } catch (e) {
+      console.error('Failed to initialize Vapi:', e);
+      return null;
+    }
+  }, []);
+  const [callStatus, setCallStatus] = useState('inactive'); // inactive, loading, active
+  const [transcript, setTranscript] = useState('');
+
+  useEffect(() => {
+    if (!vapi) return;
+    
+    vapi.on('call-start', () => setCallStatus('active'));
+    vapi.on('call-end', () => setCallStatus('inactive'));
+    vapi.on('message', (message) => {
+      if (message.type === 'transcript' && message.transcriptType === 'final') {
+        setTranscript((prev) => prev + '\n' + message.role + ': ' + message.transcript);
+      }
+    });
+    vapi.on('error', (e) => {
+      console.error('Vapi Error:', e);
+      setCallStatus('inactive');
+    });
+    return () => vapi.removeAllListeners();
+  }, [vapi]);
+
+  const toggleCall = () => {
+    if (!vapi) {
+      alert("Voice assistant failed to initialize. Please check your console.");
+      return;
+    }
+
+    if (callStatus === 'active') {
+      vapi.stop();
+      setCallStatus('inactive');
+    } else {
+      setCallStatus('loading');
+      vapi.start(import.meta.env.VITE_VAPI_ASSISTANT_ID);
+    }
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="container">
+      <h1>🎙️ Mental Voice Assistant</h1>
+      <p>Talk to the Tribal Mental Health AI Database</p>
 
-      <div className="ticks"></div>
+      <button 
+        onClick={toggleCall} 
+        className={`call-button ${callStatus}`}
+        disabled={callStatus === 'loading'}
+      >
+        {callStatus === 'inactive' && 'Start Call'}
+        {callStatus === 'loading' && 'Connecting...'}
+        {callStatus === 'active' && 'Stop Call'}
+      </button>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <div className="transcript-box">
+        <h3>Live Transcript</h3>
+        <pre>{transcript || 'Your conversation will appear here...'}</pre>
+      </div>
+    </div>
   )
 }
 

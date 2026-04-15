@@ -17,7 +17,7 @@ QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 QDRANT_COLLECTION = os.getenv("QDRANT_COLLECTION", "enterprise_kb").strip()
 
 # 3. Setup Clients
-print("Connecting to Qdrant...")
+print(f"Connecting to Qdrant at {QDRANT_URL}...")
 client = QdrantClient(
     url=QDRANT_URL,
     api_key=QDRANT_API_KEY,
