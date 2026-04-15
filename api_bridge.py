@@ -1,0 +1,24 @@
+from fastapi import FastAPI, Request
+from qdrant_client import QdrantClient
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+app = FastAPI()
+client = QdrantClient(url=os.getenv("QDRANT_URL"), api_key=os.getenv("QDRANT_API_KEY"))
+
+@app.post("/search_patient")
+async def search_patient(request: Request):
+    data = await request.json()
+    query_text = data.get("query") # Vapi will send the user's voice query here
+    
+    # Qdrant se semantic search karo
+    search_result = client.query_iterable(
+        collection_name="garima_patients_full",
+        query_text=query_text,
+        limit=1
+    )
+    
+    if search_result:
+        return {"results": search_result[0].payload['semantic_text']}
+    return {"results": "No patient data found for this query."}

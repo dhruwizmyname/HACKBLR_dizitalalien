@@ -1,87 +1,40 @@
-﻿### 1. DECOMPOSE
-* **Sub-problem A:** Identify the specific dependencies and tools we set up during this session.
-* **Sub-problem B:** Document the exact, successful terminal commands used to install and run them.
-* **Sub-problem C:** Format this information into a clean, copy-pasteable Markdown block suitable for your project's `README.md`.
+# Data Preparation Lab - April 15, 2026
 
----
+## Overview
+This lab focused on cleaning, normalizing, and establishing a robust versioning system for the CIP (Community Information Program) dataset. The primary goal was to ensure the data is "Run All" ready for downstream machine learning pipelines.
 
-### 2. SOLVE
+## Tasks Completed
 
-* **Step 1: Identify Dependencies**
-    * GitHub CLI (`gh`) - Pre-installed in Codespaces.
-    * GitHub Copilot CLI Extension (`github/gh-copilot`).
-    * Docker - Pre-installed in Codespaces.
-    * Qdrant Vector Database (`qdrant/qdrant` Docker image).
-    * *Confidence: 1.0*
+### 1. Data Cleaning & Normalization
+The raw `CIP_LATEST.csv` file contained several structural inconsistencies that would cause failures in data loaders (like Pandas or Spark). We performed the following surgical fixes:
+*   **BOM Removal:** Removed the UTF-8 Byte Order Mark (`\xef\xbb\xbf`) from the header to prevent "Unknown Column" errors.
+*   **Whitespace Trimming:** Stripped leading and trailing spaces from all fields and headers.
+*   **Missing Value Imputation:** Identified empty fields (double commas `,,`) and replaced them with `0` to maintain a consistent numeric schema where applicable.
+*   **Column Alignment:** Normalized the entire dataset to a strict **85-column** structure, resolving instances where trailing commas or missing end-of-line delimiters caused row length discrepancies.
 
-* **Step 2: Document Steps**
-    * **Copilot CLI:** `gh extension install github/gh-copilot`
-    * **Troubleshooting Ghost Ports:** `docker rm -f $(docker ps -aq)`
-    * **Running Qdrant with persistence:** `docker run -d -p 6333:6333 -p 6334:6334 -v $(pwd)/qdrant_storage:/qdrant/storage:z qdrant/qdrant`
-    * *Confidence: 1.0*
+### 2. Automated Versioning System
+To prevent overwriting data and to track iterative runs, we implemented a Python-based versioning logic.
 
-* **Step 3: Markdown Formatting**
-    * Organize into clear headings (Prerequisites, Tools, Database Setup, Troubleshooting).
-    * *Confidence: 1.0*
+**Logic implemented:**
+*   Generates filenames based on the current date: `Raw_Data_vYYYYMMDD_N.csv`.
+*   Automatically detects existing versions for the current day and increments the version number (`N`) for the next save.
+*   Provides a "latest version" detection snippet to ensure subsequent notebook cells always pull the most recent data run.
 
----
+## Final Data State
+*   **Files Created:** 
+    *   `Raw_Data_v20260415_1.csv`
+    *   `Raw_Data_v20260415_2.csv` (Latest)
+*   **Shape:** 201 Rows, 85 Columns.
+*   **Integrity:** Verified consistent column counts across all rows.
 
-### 3. VERIFY
-* **Logic:** The steps follow a logical progression for a new developer entering the Codespace: setting up helpful tooling first, then setting up the core database, and providing a troubleshooting step if things go wrong.
-* **Completeness:** Captures both the Qdrant database syntax and the GitHub Copilot CLI tool you configured. 
-* **Bias/Clarity:** The tone is instructive and clear for any new contributor joining the repository.
+## Usage
+To always load the latest version created today in your scripts, use the following pattern:
+```python
+import os, re
+from datetime import datetime
 
----
-
-### 4. SYNTHESIZE
-
-Here is the Markdown snippet. You can copy and paste this directly into your `README.md` file, right below your team's branching strategy:
-
-```markdown
-## 🚀 Codespace Setup & Installation Guide
-
-When launching this project in a GitHub Codespace, follow these steps to set up your environment dependencies and local database.
-
-### Prerequisites & Dependencies
-* **Docker:** (Pre-installed in GitHub Codespaces)
-* **GitHub CLI (`gh`):** (Pre-installed in GitHub Codespaces)
-* **Qdrant Vector Database:** Run locally via Docker
-* **GitHub Copilot CLI:** For terminal AI assistance
-
----
-
-### Step 1: Install Terminal Tooling (Optional but Recommended)
-If you want to use GitHub Copilot directly in your terminal to explain or suggest commands, install the extension:
-```bash
-gh extension install github/gh-copilot
+today = datetime.now().strftime("%Y%m%d")
+pattern = f"Raw_Data_v{today}"
+files = [f for f in os.listdir('/content') if f.startswith(pattern)]
+latest = sorted(files)[-1] # Loads the highest version number
 ```
-
-### Step 2: Set Up Qdrant (Vector Database)
-We use Qdrant for our vector storage. To spin up the database and ensure your data persists across Codespace sessions, run the following Docker command:
-
-```bash
-docker run -d \
-  -p 6333:6333 \
-  -p 6334:6334 \
-  -v $(pwd)/qdrant_storage:/qdrant/storage:z \
-  qdrant/qdrant
-```
-*Note: The `-v` flag maps the container's storage to our local `qdrant_storage` folder so data is not lost when the container stops.*
-
-### 🛠 Troubleshooting
-
-**"Port is already allocated" or "Bind for 0.0.0.0:6333 failed"**
-If you try to run Qdrant and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
-```bash
-docker rm -f $(docker ps -aq)
-```
-*Warning: This will stop and remove all currently running Docker containers in your environment. Run your Qdrant setup command again after clearing.*
-```
-
----
-
-### 5. REFLECT
-* **Overall Confidence:** 0.98
-* **Assessment:** This structure directly addresses everything we worked through and provides a robust, easy-to-read guide for the rest of your team. 
-
-Do you have any other microservices (like a Python backend or Node server) that you'd like me to append to this installation guide?
