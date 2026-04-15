@@ -85,3 +85,6 @@ docker rm -f $(docker ps -aq)
 * **Assessment:** This structure directly addresses everything we worked through and provides a robust, easy-to-read guide for the rest of your team. 
 
 Do you have any other microservices (like a Python backend or Node server) that you'd like me to append to this installation guide?
+
+
+---------------------------------------
