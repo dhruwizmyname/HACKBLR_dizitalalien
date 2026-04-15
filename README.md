@@ -28,9 +28,9 @@ This script processes the cleaned CSV data and uploads it to Qdrant Cloud or a l
 ### 1. Configuration
 Update your `.env` file with the following variables:
 ```env
-GOOGLE_CLOUD_PROJECT=your-project-id
-QDRANT_URL=your-qdrant-url
-QDRANT_API_KEY=your-api-key
+GOOGLE_CLOUD_PROJECT=hackblr-493411
+QDRANT_URL=https://f49166a3-8b8a-43af-b86a-b153f7884bd5.us-east4-0.gcp.cloud.qdrant.io:6333
+QDRANT_API_KEY=your-qdrant-api-key
 QDRANT_COLLECTION=enterprise_kb
 ```
 
