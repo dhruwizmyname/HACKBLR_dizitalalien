@@ -1,0 +1,42 @@
+{
+  "resources": [
+    {
+      "id": "1",
+      "name": "Tribal Support Line",
+      "category": "Helpline",
+      "description": "Crisis counseling and support specifically for tribal communities. Available 24/7.",
+      "contact": "1-800-TRIBAL-HELP"
+    },
+    {
+      "id": "2",
+      "name": "Healing Circles Network",
+      "category": "Community Support",
+      "description": "Traditional healing practices combined with modern therapeutic approaches. Focuses on collective trauma recovery.",
+      "contact": "healingcircles.org"
+    },
+    {
+      "id": "3",
+      "name": "Indigenous Youth Resilience Center",
+      "category": "Youth",
+      "description": "Mentorship and counseling for indigenous youth to build resilience and cultural connection.",
+      "contact": "resiliencecenter.tribe"
+    },
+    {
+      "id": "4",
+      "name": "Elder Wisdom Outreach",
+      "category": "Elders",
+      "description": "Support services tailored for tribal elders, focusing on isolation and cultural preservation.",
+      "contact": "elders.support@tribalgov.org"
+    }
+  ],
+  "frequently_asked_questions": [
+    {
+      "question": "What is tribal mental health?",
+      "answer": "A holistic approach that integrates traditional indigenous knowledge, cultural practices, and Western mental health services to promote well-being within tribal communities."
+    },
+    {
+      "question": "How can I access traditional healing?",
+      "answer": "Many tribal health centers provide traditional healing practitioners alongside medical doctors. You can contact your local tribal health board for referrals."
+    }
+  ]
+}

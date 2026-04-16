@@ -20,10 +20,11 @@ GOOGLE_CLOUD_LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1").strip(
 VAPI_WEBHOOK_SECRET = os.getenv("VAPI_WEBHOOK_SECRET", "").strip()  # <- your VAPI shared secret
 
 QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333").strip()
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", "").strip()
 QDRANT_COLLECTION = os.getenv("QDRANT_COLLECTION", "enterprise_kb").strip()
 QDRANT_TOP_K = int(os.getenv("QDRANT_TOP_K", "5"))
 
-qdrant = QdrantClient(url=QDRANT_URL, timeout=30)
+qdrant = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY, timeout=30)
 
 
 def get_embeddings_client() -> VertexAIEmbeddings:

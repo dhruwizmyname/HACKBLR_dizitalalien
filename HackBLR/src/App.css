@@ -1,0 +1,66 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.call-button {
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 2rem 0;
+  font-weight: 600;
+  min-width: 200px;
+}
+
+.call-button.inactive {
+  background-color: var(--accent);
+  color: white;
+}
+
+.call-button.loading {
+  background-color: #ffd700;
+  color: #333;
+  cursor: not-allowed;
+}
+
+.call-button.active {
+  background-color: #ff4b4b;
+  color: white;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.transcript-box {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  text-align: left;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.transcript-box h3 {
+  margin-top: 0;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.transcript-box pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}

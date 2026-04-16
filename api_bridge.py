@@ -13,12 +13,12 @@ async def search_patient(request: Request):
     query_text = data.get("query") # Vapi will send the user's voice query here
     
     # Qdrant se semantic search karo
-    search_result = client.query_iterable(
-        collection_name="garima_patients_full",
+    search_result = client.search(
+        collection_name="enterprise_kb",
         query_text=query_text,
         limit=1
     )
     
     if search_result:
-        return {"results": search_result[0].payload['semantic_text']}
+        return {"results": search_result[0].payload['text']}
     return {"results": "No patient data found for this query."}
