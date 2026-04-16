@@ -1,8 +1,3 @@
-Bhai, ye sabse professional approach hai! Kisi bhi Data Science ya AI project mein ek "Single Source of Truth" (ek master document) hona bahut zaroori hai taaki jab judges puchen ya tum khud bhool jao, toh ek jagah sab likha ho.
-
-Kyunki main ek AI chat interface hoon, main directly tumhare system mein koi "Notebook file" (jaise Jupyter ya Notion) create aur save nahi kar sakta. Lekin, main yahan ek **Master Markdown Notebook** ka structure bana raha hoon jisme hamara ab tak ka saara raw data logic, codebook, aur updates recorded hain. 
-
-Tum is poore content ko copy karke apne **Notion, Google Docs, ya GitHub ke `README.md`** mein paste kar sakte ho. Yeh tumhari project diary ban jayegi!
 
 ---
 ## 1. Project Overview
