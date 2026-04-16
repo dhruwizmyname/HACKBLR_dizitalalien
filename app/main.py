@@ -8,24 +8,28 @@ from fastapi.responses import JSONResponse
 from langchain_google_vertexai import ChatVertexAI, VertexAIEmbeddings
 from qdrant_client import QdrantClient
 
+# Load env early
 load_dotenv()
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("voice-rag")
 
 app = FastAPI(title="Voice-Activated Enterprise RAG Assistant", version="1.0.0")
 
-# Placeholder: set these in .env with your actual values.
-GOOGLE_CLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT", "").strip()  # <- your GCP project ID
+# Configuration
+GOOGLE_CLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT", "").strip()
 GOOGLE_CLOUD_LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1").strip()
-VAPI_WEBHOOK_SECRET = os.getenv("VAPI_WEBHOOK_SECRET", "").strip()  # <- your VAPI shared secret
-
+VAPI_WEBHOOK_SECRET = os.getenv("VAPI_WEBHOOK_SECRET", "").strip()
 QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333").strip()
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", "").strip()
 QDRANT_COLLECTION = os.getenv("QDRANT_COLLECTION", "enterprise_kb").strip()
 QDRANT_TOP_K = int(os.getenv("QDRANT_TOP_K", "5"))
 
-qdrant = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY, timeout=30)
+# SPIFFE Trust Domain Configuration
+SPIFFE_TRUST_DOMAIN = os.getenv("SPIFFE_TRUST_DOMAIN", "example.org")
 
+# Clients
+qdrant = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY, timeout=30)
 
 def get_embeddings_client() -> VertexAIEmbeddings:
     if not GOOGLE_CLOUD_PROJECT:
@@ -35,7 +39,6 @@ def get_embeddings_client() -> VertexAIEmbeddings:
         project=GOOGLE_CLOUD_PROJECT,
         location=GOOGLE_CLOUD_LOCATION,
     )
-
 
 def get_llm_client() -> ChatVertexAI:
     if not GOOGLE_CLOUD_PROJECT:
@@ -47,7 +50,6 @@ def get_llm_client() -> ChatVertexAI:
         temperature=0.2,
         max_output_tokens=500,
     )
-
 
 def extract_text_from_payload(obj: Any) -> Optional[str]:
     priority_keys = ("message", "input", "transcript", "text", "query", "prompt", "utterance")
@@ -69,19 +71,6 @@ def extract_text_from_payload(obj: Any) -> Optional[str]:
         return obj.strip()
     return None
 
-
-def validate_vapi_secret(x_vapi_secret: Optional[str], authorization: Optional[str]) -> None:
-    if not VAPI_WEBHOOK_SECRET:
-        return
-
-    incoming = (x_vapi_secret or "").strip()
-    if not incoming and authorization and authorization.lower().startswith("bearer "):
-        incoming = authorization[7:].strip()
-
-    if incoming != VAPI_WEBHOOK_SECRET:
-        raise HTTPException(status_code=401, detail="Unauthorized webhook request.")
-
-
 def retrieve_context(user_text: str) -> List[str]:
     try:
         embeddings = get_embeddings_client()
@@ -92,18 +81,16 @@ def retrieve_context(user_text: str) -> List[str]:
             limit=QDRANT_TOP_K,
             with_payload=True,
         )
+        context = []
+        for hit in hits:
+            payload: Dict[str, Any] = hit.payload or {}
+            txt = payload.get("text")
+            if isinstance(txt, str) and txt.strip():
+                context.append(txt.strip())
+        return context
     except Exception as exc:
         logger.exception("Vector search failed: %s", exc)
-        raise HTTPException(status_code=502, detail="Failed to query enterprise knowledge base.")
-
-    context = []
-    for hit in hits:
-        payload: Dict[str, Any] = hit.payload or {}
-        txt = payload.get("text")
-        if isinstance(txt, str) and txt.strip():
-            context.append(txt.strip())
-    return context
-
+        return []
 
 def generate_answer(user_text: str, context_chunks: List[str]) -> str:
     llm = get_llm_client()
@@ -124,47 +111,28 @@ Retrieved context:
 
     try:
         result = llm.invoke(prompt)
+        content = getattr(result, "content", "")
+        return str(content).strip() if content else "I'm sorry, I couldn't generate a response."
     except Exception as exc:
         logger.exception("LLM generation failed: %s", exc)
-        raise HTTPException(status_code=502, detail="Failed to generate response from LLM.")
-
-    content = getattr(result, "content", "")
-    if isinstance(content, str):
-        answer = content.strip()
-    elif isinstance(content, list):
-        answer = " ".join(str(x) for x in content).strip()
-    else:
-        answer = str(content).strip()
-
-    if not answer:
-        raise HTTPException(status_code=502, detail="LLM returned an empty response.")
-    return answer
-
+        return "I'm having trouble connecting to my brain right now. Please try again later."
 
 @app.get("/health")
 def health() -> Dict[str, str]:
     return {"status": "ok"}
 
-
 @app.post("/vapi-webhook")
-async def vapi_webhook(
-    request: Request,
-    x_vapi_secret: Optional[str] = Header(default=None),
-    authorization: Optional[str] = Header(default=None),
-) -> JSONResponse:
-    validate_vapi_secret(x_vapi_secret, authorization)
-
+async def vapi_webhook(request: Request) -> JSONResponse:
     try:
         payload = await request.json()
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid JSON payload.")
+        user_text = extract_text_from_payload(payload) or payload.get("query")
+        
+        if not user_text:
+            return JSONResponse({"error": "No query found."}, status_code=400)
 
-    user_text = extract_text_from_payload(payload)
-    if not user_text:
-        raise HTTPException(status_code=400, detail="No user text found in VAPI payload.")
-
-    context = retrieve_context(user_text)
-    answer = generate_answer(user_text, context)
-
-    # VAPI spoken reply payload: plain text in a JSON field.
-    return JSONResponse({"response": answer})
+        context = retrieve_context(user_text)
+        answer = generate_answer(user_text, context)
+        return JSONResponse({"response": answer})
+    except Exception as e:
+        logger.error(f"Webhook Error: {e}")
+        return JSONResponse({"error": str(e)}, status_code=500)

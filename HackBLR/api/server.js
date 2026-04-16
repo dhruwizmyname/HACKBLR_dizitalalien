@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import { WorkloadClient } from 'spiffe';
 
 dotenv.config();
 
@@ -12,14 +13,24 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const PYTHON_API_URL = process.env.PYTHON_API_URL; // e.g., http://localhost:8000/vapi-webhook
 
 app.use(cors());
 app.use(express.json());
 
-// Path to JSON DB (one level up from /api folder)
 const DB_PATH = path.join(__dirname, '../data/mental_health_db.json');
 
-// Helper to read DB
+// SPIFFE Client Initialization
+let spiffeClient = null;
+try {
+    spiffeClient = new WorkloadClient({
+        spiffeSocketPath: process.env.SPIFFE_ENDPOINT_SOCKET || '/tmp/spire-agent/public/api.sock'
+    });
+    console.log("SPIFFE Workload Client initialized");
+} catch (e) {
+    console.warn("SPIFFE not available, falling back to insecure communication:", e.message);
+}
+
 const readDB = () => {
     try {
         const data = fs.readFileSync(DB_PATH, 'utf8');
@@ -31,14 +42,34 @@ const readDB = () => {
 };
 
 // Vapi "Tool" Endpoint: Search the database
-app.post('/api/search', (req, res) => {
-    const { query } = req.body;
-    console.log(`AI Search Query: ${query}`);
+app.post('/api/search', async (req, res) => {
+    const { query, useSemantic = false } = req.body;
+    console.log(`AI Search Query: ${query} (Semantic: ${useSemantic})`);
     
     if (!query) {
         return res.status(400).json({ error: 'Search query is required' });
     }
 
+    // 1. Optional Semantic Search via Python Backend
+    if (useSemantic && PYTHON_API_URL) {
+        try {
+            console.log("Forwarding to Python Semantic Search...");
+            const response = await fetch(PYTHON_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query })
+            });
+            const data = await response.json();
+            return res.json({
+                semantic_results: data.response,
+                context: "Semantic search results from Vector DB."
+            });
+        } catch (e) {
+            console.error("Semantic search failed, falling back to local search:", e.message);
+        }
+    }
+
+    // 2. Local Keyword Search (Fallback or Default)
     const db = readDB();
     const results = (db.resources || []).filter(r => 
         r.name?.toLowerCase().includes(query.toLowerCase()) || 
