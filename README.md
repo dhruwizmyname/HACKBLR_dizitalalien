@@ -1,69 +1,71 @@
-# HackBLR - Community Information Program (CIP) Assistant
+## 🚀 Codespace Setup & Installation Guide
 
-## Project Overview
-HackBLR is a voice-activated enterprise RAG (Retrieval-Augmented Generation) assistant designed to help process and retrieve information from the Community Information Program (CIP) dataset. This project includes a robust data preparation pipeline and a vector-based search system using Qdrant and Google Vertex AI.
+We have automated the environment setup process. When launching this project locally or in a GitHub Codespace, follow these steps to initialize your dependencies and local database.
 
----
 
-## 🛠️ Components
+**├── scripts/
+│   ├── setup_codespace.sh   # Automated setup for Linux/Mac
+│   └── setup_codespace.bat  # Automated setup for Windows
+├── qdrant_storage/          # Persistent Qdrant volume (Ignored by Git)
+├── core_integration.py      # Phase 1: Qdrant read/write testing script
+├── requirements.txt         # Python package dependencies
+├── .gitignore               # Standard ignore file for venv, cache, and env vars
+└── README.md                # Project documentation**
 
-### 1. HackBLR Voice App
-A modern React-based voice assistant interface located in the `HackBLR/` directory.
-
-### 2. Data Preparation & Versioning
-Located in the root directory, these scripts ensure the CIP dataset is clean and versioned correctly.
-*   **Data Cleaning:** Handles BOM removal, whitespace trimming, and missing value imputation.
-*   **Versioning:** Automatically generates `Raw_Data_vYYYYMMDD_N.csv` to track data iterations.
-
-### 3. Data Ingestion (`Data_Injector.py`)
-This script processes the cleaned CSV data and uploads it to Qdrant Cloud or a local Qdrant instance.
-*   **Embeddings:** Uses Google Vertex AI (`text-embedding-004`).
-*   **Logic:** Converts structured patient data into readable "stories" for better semantic retrieval.
-*   **Usage:** `python Data_Injector.py`
+### Prerequisites 
+* **Docker:** Pre-installed in GitHub Codespaces. Ensure Docker Desktop is running if you are working locally.
+* **GitHub CLI (`gh`):** Pre-installed in GitHub Codespaces.
 
 ---
 
-## 🚀 Setup & Verification
+### Step 1: Run the Automated Setup Script
+Instead of manually installing dependencies, run our idempotent setup script. It will intelligently check your environment and only install or start what is missing.
 
-### 1. Configuration
-Update your `.env` file with the following variables:
-```env
-GOOGLE_CLOUD_PROJECT=hackblr-493411
-QDRANT_URL=https://f49166a3-8b8a-43af-b86a-b153f7884bd5.us-east4-0.gcp.cloud.qdrant.io:6333
-QDRANT_API_KEY=your-qdrant-api-key
-QDRANT_COLLECTION=enterprise_kb
-```
-
-### 2. Verify Qdrant Connection
-Run the following script to ensure your Qdrant instance is reachable:
+**For Mac/Linux/Codespaces:**
 ```bash
-python check_qdrant.py
+chmod +x scripts/setup_codespace.sh
+./scripts/setup_codespace.sh
 ```
 
-### 3. Inject Data
-Once connected, upload your latest data:
-```bash
-python Data_Injector.py
+**For windows:**
+DOS
+```
+scripts\setup_codespace.bat
 ```
 
----
+** 🛠 Troubleshooting & Manual Fallback **
 
-## 📊 Data Preparation Details (April 15, 2026)
-This project maintains a strict cleaning and normalization process for the `CIP_LATEST.csv` file:
-*   **Normalized Structure:** Strict 85-column format.
-*   **Latest Data File:** `Raw_Data_v20260415_2.csv` (201 Rows).
-*   **Integrity:** Verified consistent column counts and header normalization.
+Docker: "Port is already allocated" or "Bind for 0.0.0.0:6333 failed"
+If you try to run the setup and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
 
----
+** Docker: "Port is already allocated" or "Bind for 0.0.0.0:6333 failed" **
 
-## Usage Example (Python)
-To load the latest data version in your own scripts:
-```python
-import os
-from datetime import datetime
+If you try to run the setup and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
 
-today = datetime.now().strftime("%Y%m%d")
-pattern = f"Raw_Data_v{today}"
-files = [f for f in os.listdir('.') if f.startswith(pattern)]
-latest = sorted(files)[-1]
+** BASH **
 ```
+docker rm -f $(docker ps -aq)
+
+```
+** Manual Qdrant Start **
+
+Docker: "Port is already allocated" or "Bind for 0.0.0.0:6333 failed"
+If you try to run the setup and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
+
+** Docker: "Port is already allocated" or "Bind for 0.0.0.0:6333 failed" **
+
+If you try to run the setup and get a port allocation error, a previous container or ghost process is likely occupying the port. Clear all running containers with:
+
+** BASH **
+```
+docker run -d \
+  --name hackblr-qdrant \
+  -p 6333:6333 \
+  -p 6334:6334 \
+  -v $(pwd)/qdrant_storage:/qdrant/storage:z \
+  qdrant/qdrant
+
+```
+
+
+
