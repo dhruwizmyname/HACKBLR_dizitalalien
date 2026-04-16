@@ -1,3 +1,4 @@
+/* global process, fetch */
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
@@ -21,13 +22,12 @@ app.use(express.json());
 const DB_PATH = path.join(__dirname, '../data/mental_health_db.json');
 
 // SPIFFE Client Initialization
-let spiffeClient = null;
+let spiffeClientInstance = null;
 try {
-    // SpiffeWorkloadAPIClient is the correct export for this library
-    spiffeClient = new SpiffeWorkloadAPIClient({
+    spiffeClientInstance = new SpiffeWorkloadAPIClient({
         spiffeSocketPath: process.env.SPIFFE_ENDPOINT_SOCKET || '/tmp/spire-agent/public/api.sock'
     });
-    console.log("SPIFFE Workload Client initialized");
+    console.log("SPIFFE Workload Client initialized:", !!spiffeClientInstance);
 } catch (e) {
     console.warn("SPIFFE not available, falling back to insecure communication:", e.message);
 }
