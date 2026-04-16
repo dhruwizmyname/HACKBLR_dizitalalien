@@ -21,15 +21,26 @@ app.use(express.json());
 
 const DB_PATH = path.join(__dirname, '../data/mental_health_db.json');
 
+// Root Route
+app.get('/', (req, res) => {
+    res.json({ 
+        message: 'HackBLR Node.js API is running',
+        endpoints: {
+            health: '/api/health',
+            search: '/api/search (POST)'
+        }
+    });
+});
+
 // SPIFFE Client Initialization
 let spiffeClientInstance = null;
 try {
     spiffeClientInstance = new SpiffeWorkloadAPIClient({
         spiffeSocketPath: process.env.SPIFFE_ENDPOINT_SOCKET || '/tmp/spire-agent/public/api.sock'
     });
-    console.log("SPIFFE Workload Client initialized:", !!spiffeClientInstance);
+    console.log("SPIFFE Workload Client initialized");
 } catch (e) {
-    console.warn("SPIFFE not available, falling back to insecure communication:", e.message);
+    console.warn("SPIFFE not available, falling back to insecure communication");
 }
 
 const readDB = () => {
@@ -44,7 +55,6 @@ const readDB = () => {
 
 app.post('/api/search', async (req, res) => {
     const { query, useSemantic = false } = req.body;
-    console.log(`AI Search Query: ${query} (Semantic: ${useSemantic})`);
     
     if (!query) {
         return res.status(400).json({ error: 'Search query is required' });
@@ -52,7 +62,6 @@ app.post('/api/search', async (req, res) => {
 
     if (useSemantic && PYTHON_API_URL) {
         try {
-            console.log("Forwarding to Python Semantic Search...");
             const response = await fetch(PYTHON_API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -64,15 +73,14 @@ app.post('/api/search', async (req, res) => {
                 context: "Semantic search results from Vector DB."
             });
         } catch (e) {
-            console.error("Semantic search failed, falling back to local search:", e.message);
+            console.error("Semantic search failed:", e.message);
         }
     }
 
     const db = readDB();
     const results = (db.resources || []).filter(r => 
         r.name?.toLowerCase().includes(query.toLowerCase()) || 
-        r.description?.toLowerCase().includes(query.toLowerCase()) ||
-        r.category?.toLowerCase().includes(query.toLowerCase())
+        r.description?.toLowerCase().includes(query.toLowerCase())
     );
 
     const faqs = (db.frequently_asked_questions || []).filter(f => 
@@ -82,8 +90,7 @@ app.post('/api/search', async (req, res) => {
 
     res.json({
         found_resources: results,
-        found_faqs: faqs,
-        context: "Use this data to answer the user's question directly and concisely."
+        found_faqs: faqs
     });
 });
 
