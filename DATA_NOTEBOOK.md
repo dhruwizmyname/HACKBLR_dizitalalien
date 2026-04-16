@@ -5,9 +5,6 @@ Kyunki main ek AI chat interface hoon, main directly tumhare system mein koi "No
 Tum is poore content ko copy karke apne **Notion, Google Docs, ya GitHub ke `README.md`** mein paste kar sakte ho. Yeh tumhari project diary ban jayegi!
 
 ---
-
-# 📓 Garima Project - Data Master Notebook
-
 ## 1. Project Overview
 * **Objective:** To build an AI-powered Voice Assistant (using Vapi.ai) that can query and summarize tribal mental health clinical data.
 * **Source Data:** Central Institute of Psychiatry (CIP) - Tribal Populations Mental Health Utilization Survey.
