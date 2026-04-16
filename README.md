@@ -3,6 +3,8 @@
 ## 🌟 Overview
 HackBLR is a comprehensive AI-driven ecosystem designed for the **Tribal Mental Health Database** and the **Community Information Program (CIP)**. It combines voice-activated AI, semantic search, and secure workload identity to provide a robust platform for information retrieval and mental health support.
 
+**🔗 Live Web App:** [https://cautious-space-enigma-7r4vg5wvrrgfx4jr-5173.app.github.dev/](https://cautious-space-enigma-7r4vg5wvrrgfx4jr-5173.app.github.dev/)
+
 ---
 
 ## 🏗️ System Architecture

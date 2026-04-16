@@ -4,6 +4,7 @@ A unified React and Node.js application designed for seamless deployment on Rend
 
 ## 🚀 Features
 
+- **Live Web App:** [https://cautious-space-enigma-7r4vg5wvrrgfx4jr-5173.app.github.dev/](https://cautious-space-enigma-7r4vg5wvrrgfx4jr-5173.app.github.dev/)
 - **Voice Interaction:** Leverages Vapi AI for a responsive conversational experience.
 - **Semantic Search:** Provides keyword-based search via a local JSON database, with advanced semantic search capabilities through an external Python API and Qdrant Vector DB.
 - **Unified Architecture:** A streamlined Node.js backend serves the React frontend, facilitating single-service deployment.
