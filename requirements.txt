@@ -4,3 +4,4 @@ qdrant-client
 langchain-google-vertexai
 python-dotenv
 pypdf
+spiffe
