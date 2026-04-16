@@ -19,10 +19,20 @@ const PYTHON_API_URL = process.env.PYTHON_API_URL;
 app.use(cors());
 app.use(express.json());
 
-const DB_PATH = path.join(__dirname, '../data/mental_health_db.json');
+// Log all incoming requests for debugging on Render
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+});
 
-// Root Route
-app.get('/', (req, res) => {
+const DB_PATH = path.join(__dirname, '../data/mental_health_db.json');
+const DIST_PATH = path.join(__dirname, '../dist');
+
+// Serve static files from the 'dist' directory (production)
+app.use(express.static(DIST_PATH));
+
+// Root Route - serves the API status if requested via JSON, else the frontend will be served by static/catch-all
+app.get('/api', (req, res) => {
     res.json({ 
         message: 'HackBLR Node.js API is running',
         endpoints: {
@@ -74,7 +84,10 @@ app.post('/api/search', async (req, res) => {
             });
         } catch (e) {
             console.error("Semantic search failed:", e.message);
+            // Fallback to keyword search on error
         }
+    } else if (useSemantic && !PYTHON_API_URL) {
+        console.warn("Semantic search requested but PYTHON_API_URL is not set.");
     }
 
     const db = readDB();
@@ -96,6 +109,22 @@ app.post('/api/search', async (req, res) => {
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'Database server is healthy and running' });
+});
+
+// Use middleware for catch-all to handle Express 5 routing changes
+app.use((req, res, next) => {
+    // If it's an API request that wasn't handled, send 404
+    if (req.path.startsWith('/api')) {
+        return res.status(404).json({ error: 'API endpoint not found' });
+    }
+    
+    // Otherwise, serve index.html from dist
+    const indexPath = path.join(DIST_PATH, 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send('Not Found');
+    }
 });
 
 app.listen(PORT, () => {

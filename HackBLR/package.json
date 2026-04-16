@@ -1,10 +1,14 @@
 {
-  "name": "HackBLR",
+  "name": "hackblr-dizitalalien",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "HackBLR Mental Health Voice Assistant (Node.js/React)",
   "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
-    "start": "vite",
+    "start": "node api/server.js",
     "dev": "vite",
     "backend": "node api/server.js",
     "build": "vite build",
