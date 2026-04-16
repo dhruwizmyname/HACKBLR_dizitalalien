@@ -6,8 +6,6 @@ Tum is poore content ko copy karke apne **Notion, Google Docs, ya GitHub ke `REA
 
 ---
 
-# 📓 Garima Project - Data Master Notebook
-
 ## 1. Project Overview
 * **Objective:** To build an AI-powered Voice Assistant (using Vapi.ai) that can query and summarize tribal mental health clinical data.
 * **Source Data:** Central Institute of Psychiatry (CIP) - Tribal Populations Mental Health Utilization Survey.
