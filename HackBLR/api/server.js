@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { WorkloadClient } from 'spiffe';
+import { SpiffeWorkloadAPIClient } from 'spiffe';
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const PYTHON_API_URL = process.env.PYTHON_API_URL; // e.g., http://localhost:8000/vapi-webhook
+const PYTHON_API_URL = process.env.PYTHON_API_URL;
 
 app.use(cors());
 app.use(express.json());
@@ -23,7 +23,8 @@ const DB_PATH = path.join(__dirname, '../data/mental_health_db.json');
 // SPIFFE Client Initialization
 let spiffeClient = null;
 try {
-    spiffeClient = new WorkloadClient({
+    // SpiffeWorkloadAPIClient is the correct export for this library
+    spiffeClient = new SpiffeWorkloadAPIClient({
         spiffeSocketPath: process.env.SPIFFE_ENDPOINT_SOCKET || '/tmp/spire-agent/public/api.sock'
     });
     console.log("SPIFFE Workload Client initialized");
@@ -41,7 +42,6 @@ const readDB = () => {
     }
 };
 
-// Vapi "Tool" Endpoint: Search the database
 app.post('/api/search', async (req, res) => {
     const { query, useSemantic = false } = req.body;
     console.log(`AI Search Query: ${query} (Semantic: ${useSemantic})`);
@@ -50,7 +50,6 @@ app.post('/api/search', async (req, res) => {
         return res.status(400).json({ error: 'Search query is required' });
     }
 
-    // 1. Optional Semantic Search via Python Backend
     if (useSemantic && PYTHON_API_URL) {
         try {
             console.log("Forwarding to Python Semantic Search...");
@@ -69,7 +68,6 @@ app.post('/api/search', async (req, res) => {
         }
     }
 
-    // 2. Local Keyword Search (Fallback or Default)
     const db = readDB();
     const results = (db.resources || []).filter(r => 
         r.name?.toLowerCase().includes(query.toLowerCase()) || 
