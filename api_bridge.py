@@ -12,7 +12,7 @@ async def search_patient(request: Request):
     data = await request.json()
     query_text = data.get("query") # Vapi will send the user's voice query here
     
-    # Qdrant se semantic search karo
+    # Execute semantic search via Qdrant
     search_result = client.search(
         collection_name="enterprise_kb",
         query_text=query_text,
