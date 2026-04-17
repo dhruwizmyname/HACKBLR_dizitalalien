@@ -1,0 +1,12 @@
+.git
+.gitignore
+node_modules
+dist
+qdrant_storage
+__pycache__
+*.pyc
+.env
+.devcontainer
+tests
+DNT
+scripts

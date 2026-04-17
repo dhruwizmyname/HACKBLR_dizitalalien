@@ -3,7 +3,7 @@
 ## 🌟 Overview
 HackBLR is a comprehensive AI-driven ecosystem designed for the **Tribal Mental Health Database** and the **Community Information Program (CIP)**. It combines voice-activated AI, semantic search, and secure workload identity to provide a robust platform for information retrieval and mental health support.
 
-**🔗 Live Web App:** [https://cautious-space-enigma-7r4vg5wvrrgfx4jr-5173.app.github.dev/](https://cautious-space-enigma-7r4vg5wvrrgfx4jr-5173.app.github.dev/)
+**🔗 Live Web App (GCP):** [https://hackblr-app-rpfcyhqwsa-uc.a.run.app](https://hackblr-app-rpfcyhqwsa-uc.a.run.app)
 
 ---
 
@@ -13,40 +13,48 @@ HackBLR is a comprehensive AI-driven ecosystem designed for the **Tribal Mental 
 A modern **React + Vite** application providing a seamless voice interface.
 - **Vapi Integration:** Uses the Vapi SDK for real-time, low-latency voice interaction.
 - **Live Transcript:** Displays real-time conversation between the user and the AI.
+- **Deployment:** Hosted on **Google Cloud Run**, served via the Node.js API.
 
 ### 2. Node.js Search API (`HackBLR/api/`)
 An **Express.js** backend that serves as a high-speed search layer for local community resources.
 - **Local Database:** Connects to `data/mental_health_db.json` for FAQ and resource lookup.
 - **Vapi Tool Endpoint:** Configured to handle direct tool calls from the Vapi voice assistant.
+- **Deployment:** Hosted on **Google Cloud Run**.
 
 ### 3. Python Semantic Search API (`app/`)
 A **FastAPI** service focused on deep semantic retrieval using Vector RAG.
 - **Qdrant Backend:** Performs semantic search across the `enterprise_kb` collection.
 - **Embedding Integration:** Leverages Google Vertex AI (`text-embedding-004`) for high-accuracy patient data retrieval.
+- **Deployment:** Hosted on **Google Cloud Run**.
 
-### 4. Security: SPIFFE/SPIRE (`spire/`)
-Zero-trust workload identity for secure service-to-service communication.
-- **Trust Domain:** `example.org`
-- **Identity Issuance:** Short-lived SVIDs for the Node.js and Python APIs to communicate without hardcoded secrets.
+### 4. Database: Qdrant Vector DB
+- **Deployment:** Hosted on a **Google Compute Engine (GCE)** VM (`e2-small`) with persistent storage.
+- **Access:** Accessible via `http://34.31.164.38:6333`.
+
+### 5. Security: Workload Identity & IAM
+- **GCP IAM:** Uses Service Accounts with fine-grained permissions for Vertex AI and Artifact Registry.
+- **SPIFFE/SPIRE (Optional):** Zero-trust workload identity configuration available in `spire/`.
 
 ---
 
-## 🚀 Deployment (Render)
+## 🚀 Deployment (Google Cloud Platform)
 
-### Live Hosting Configuration
-The project is configured for automated deployment via **Render** from the `main` branch using `render.yaml`.
+The project is containerized using Docker and deployed to **Google Cloud Run**.
 
-#### **Service Settings**
-| Service | Build Command | Start Command |
+### **Infrastructure Components**
+| Component | Service | URL |
 | :--- | :--- | :--- |
-| **Frontend** | `cd HackBLR && npm install && npm run build` | (Static Site) |
-| **Node API** | `cd HackBLR && npm install` | `cd HackBLR && node api/server.js` |
-| **Python API** | `pip install -r requirements.txt` | `uvicorn app.main:app --host 0.0.0.0 --port 10000` |
+| **Main App (UI + Node)** | Cloud Run | [https://hackblr-app-rpfcyhqwsa-uc.a.run.app](https://hackblr-app-rpfcyhqwsa-uc.a.run.app) |
+| **Semantic API (Python)** | Cloud Run | [https://hackblr-python-api-rpfcyhqwsa-uc.a.run.app](https://hackblr-python-api-rpfcyhqwsa-uc.a.run.app) |
+| **Vector DB (Qdrant)** | Compute Engine | [http://34.31.164.38:6333](http://34.31.164.38:6333) |
+
+### **Deployment Scripts**
+- `gcloud-setup-db.sh`: Automates GCE VM creation, firewall rules, and Qdrant container startup.
+- `gcloud-deploy.sh`: Builds Docker images and deploys services to Cloud Run.
 
 #### **Required Environment Variables**
-- **Frontend:** `VITE_VAPI_PUBLIC_KEY`, `VITE_VAPI_ASSISTANT_ID`
-- **Node API:** `PYTHON_API_URL` (URL of your live Python service + `/vapi-webhook`)
-- **Python API:** `QDRANT_URL`, `QDRANT_API_KEY`, `GOOGLE_CLOUD_PROJECT`
+- **Python API:** `QDRANT_URL`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`.
+- **Node API:** `PYTHON_API_URL`, `VITE_VAPI_PUBLIC_KEY`, `VITE_VAPI_ASSISTANT_ID`.
 
 ---
 

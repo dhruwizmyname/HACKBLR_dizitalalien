@@ -1,22 +1,9 @@
 services:
-  # 1. React Frontend (Vite)
+  # 1. Combined Frontend & Node.js Search API
   - type: web
-    name: hackblr-frontend
-    env: static
-    buildCommand: cd HackBLR && npm install && npm run build
-    publishPath: HackBLR/dist
-    branch: main
-    envVars:
-      - key: VITE_VAPI_PUBLIC_KEY
-        sync: false
-      - key: VITE_VAPI_ASSISTANT_ID
-        sync: false
-
-  # 2. Node.js Search API
-  - type: web
-    name: hackblr-node-api
+    name: hackblr-app
     env: node
-    buildCommand: cd HackBLR && npm install
+    buildCommand: cd HackBLR && npm install && npm run build
     startCommand: cd HackBLR && node api/server.js
     branch: main
     envVars:
@@ -24,18 +11,32 @@ services:
         value: 10000
       - key: NODE_ENV
         value: production
+      - key: VITE_VAPI_PUBLIC_KEY
+        sync: false
+      - key: VITE_VAPI_ASSISTANT_ID
+        sync: false
+      - key: PYTHON_API_URL
+        sync: false # Set this to the URL of the Python API below
 
-  # 3. Python Semantic Search API
+  # 2. Python Semantic Search API
   - type: web
     name: hackblr-python-api
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port 10000
+    startCommand: ./app/start.sh
     branch: main
     envVars:
+      - key: GOOGLE_CREDENTIALS_JSON
+        sync: false # Add the content of your service-account.json here
       - key: QDRANT_URL
         sync: false
       - key: QDRANT_API_KEY
         sync: false
-      - key: GOOGLE_APPLICATION_CREDENTIALS
+      - key: QDRANT_COLLECTION
+        value: enterprise_kb
+      - key: GOOGLE_CLOUD_PROJECT
+        sync: false
+      - key: GOOGLE_CLOUD_LOCATION
+        value: us-central1
+      - key: VAPI_WEBHOOK_SECRET
         sync: false
