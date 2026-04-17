@@ -54,14 +54,31 @@ The project is configured for automated deployment via **Render** from the `main
 
 1. **Install Dependencies:**
    ```bash
+   # Install Node.js dependencies
    cd HackBLR && npm install
+
+   # Install Python dependencies (from root)
    pip install -r requirements.txt
    ```
 
-2. **Run Frontend (Dev Mode):**
-   ```bash
-   npm run dev
-   ```
+2. **Start the Services Locally:**
+
+   - **Option A: Run Frontend (Vite Dev Mode)**
+     ```bash
+     cd HackBLR
+     npm run dev
+     ```
+
+   - **Option B: Run Node.js API (Backend)**
+     ```bash
+     cd HackBLR
+     npm start
+     ```
+
+   - **Option C: Run Python Semantic API**
+     ```bash
+     uvicorn app.main:app --reload
+     ```
 
 3. **Verify Vector Search:**
    ```bash
