@@ -7,6 +7,10 @@ load_dotenv()
 app = FastAPI()
 client = QdrantClient(url=os.getenv("QDRANT_URL"), api_key=os.getenv("QDRANT_API_KEY"))
 
+@app.get("/")
+async def root():
+    return {"message": "FastAPI Bridge is running", "endpoints": ["/search_patient (POST)"]}
+
 @app.post("/search_patient")
 async def search_patient(request: Request):
     data = await request.json()
