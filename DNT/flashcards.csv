@@ -1,0 +1,50 @@
+What is the primary objective of the HackBLR AI ecosystem?,To provide robust information retrieval and mental health support for tribal populations.
+Which two programs are integrated into the HackBLR Tribal Mental Health database?,The Tribal Mental Health Database and the Community Information Program (CIP).
+"What technology does HackBLR use to provide real-time, low-latency voice interaction?",Vapi SDK.
+"In the HackBLR system, which component provides the frontend voice interface?",A React + Vite application.
+What is the purpose of the 'Live Transcript' feature in the HackBLR frontend?,To display the real-time conversation between the user and the AI.
+What framework is used for the Node.js Search API in HackBLR?,Express.js.
+Which file serves as the local database for FAQ and resource lookup in the Node API?,data/mental_health_db.json
+The Node.js Search API handles direct tool calls from the voice assistant via the _____.,Vapi Tool Endpoint
+What specific Python framework is used for the Semantic Search API?,FastAPI.
+The Python Semantic Search API focuses on deep semantic retrieval using _____.,Vector RAG
+Which backend system is used by the Python API to perform semantic search across the enterprise knowledge base?,Qdrant.
+Name the specific Google Vertex AI model used for patient data embedding in HackBLR.,text-embedding-004
+What framework provides zero-trust workload identity for secure communication in HackBLR?,SPIFFE/SPIRE.
+"In the HackBLR SPIRE configuration, what is the defined 'Trust Domain'?",example.org
+How does SPIFFE/SPIRE allow APIs to communicate securely without hardcoded secrets?,By using short-lived SVIDs for identity issuance.
+The CIP dataset used in HackBLR originates from which institution?,The Central Institute of Psychiatry (CIP).
+What is the first step in the HackBLR Data Pipeline?,Processing the raw CSV file.
+"In the HackBLR data pipeline, what occurs immediately after Python processing (Pandas + Sentence Transformers)?",Data is stored in the Qdrant Vector DB.
+How many total patient records are included in the HackBLR Data Intelligence system?,200 Patients.
+The HackBLR normalization process for tribal mental health data involves how many columns?,85 columns.
+What clinical scale is represented by the acronym ASS in the HackBLR dataset?,Affiliate Stigma Scale.
+What clinical scale is represented by the acronym ZBA in the HackBLR dataset?,Zarit Burden Assessment.
+What clinical scale is represented by the acronym SAQ in the HackBLR dataset?,Supernatural Attitude Questionnaire.
+Why are numerical codes like 'Gender' or 'Substance Use' mapped to descriptive strings before embedding?,To ensure natural AI processing during semantic transformation.
+Which hosting platform is used for the automated deployment of the HackBLR services?,Render.
+What is the Render 'Build Command' for the HackBLR Frontend?,cd HackBLR && npm install && npm run build
+What is the 'Start Command' for the HackBLR Python API on Render?,uvicorn app.main:app --host 0.0.0.0 --port 10000
+Which environment variable is required by the Frontend to identify the specific AI assistant?,VITE_VAPI_ASSISTANT_ID
+The Node API requires the environment variable _____ to link to the live Python service.,PYTHON_API_URL
+Which environment variable identifies the Google Cloud Project for the Python API?,GOOGLE_CLOUD_PROJECT
+What command is used to run the HackBLR Frontend in development mode?,npm run dev
+Which Python script is used to verify the status of the Vector Search database?,check_qdrant.py
+What is the specific collection name used in the Qdrant backend for semantic search?,enterprise_kb
+What is the purpose of the Node.js API serving as a high-speed search layer?,To lookup local community resources and FAQs.
+What is the trust domain suffix used for identities issued by SPIRE in HackBLR?,example.org
+The acronym RAG in 'Vector RAG' stands for _____.,Retrieval-Augmented Generation
+What branch is configured for automated deployment to Render?,The main branch.
+Which service uses the start command 'node api/server.js'?,The Node API.
+"To install Python dependencies for the project, which command is used?",pip install -r requirements.txt
+Which frontend environment variable holds the public authorization key for the voice service?,VITE_VAPI_PUBLIC_KEY
+What are the two environment variables required specifically for Qdrant connectivity in the Python API?,QDRANT_URL and QDRANT_API_KEY.
+"In the HackBLR architecture, what is the role of 'Sentence Transformers'?",They are part of the pipeline to transform CSV data for the Vector DB.
+Which component of HackBLR provides the endpoint for Vapi webhooks?,The Python API service.
+What is the primary function of the FastAPI service in the HackBLR stack?,Semantic retrieval and integration with the Vector RAG system.
+Which clinical assessment in the CIP dataset evaluates the burden on caregivers?,Zarit Burden Assessment (ZBA).
+How does the HackBLR system ensure secure service-to-service communication?,Through zero-trust workload identities provided by SPIRE.
+Which library is used by the Python API to manage the clinical data normalization pipeline?,Pandas.
+What is the 'Start Command' for the Node API when deployed on Render?,cd HackBLR && node api/server.js
+Concept: SVID,Definition: A short-lived SPIFFE Verifiable Identity Document used for secure workload authentication.
+What is the date of the latest update provided in the HackBLR documentation?,"April 16, 2026."
