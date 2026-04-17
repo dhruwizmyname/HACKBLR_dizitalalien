@@ -70,7 +70,7 @@ To ensure the Vapi AI processes the data naturally, numerical codes are mapped t
 
 **Example Transformation:**
 * **Raw Entry:** `Gender: 1, First_Contact: 7, SAQ_Witchcraft: 1`
-* **Semantic Summary (Injected to Qdrant):** *"The patient is Male. Their initial contact for treatment was a Traditional Healer (Ojha/Tantrik). They attribute the cause of illness to supernatural factors, specifically witchcraft."*
+* **Semantic Summary (Injected to Qdrant):** *"The patient is Male. Their initial contact for treatment was a Traditional Healer. They attribute the cause of illness to supernatural factors, specifically witchcraft."*
 
 ## 5. Technical Stack & Deployment Specifications
 * **Environment:** GitHub Codespaces (Executing FastAPI Bridge).

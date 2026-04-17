@@ -49,6 +49,14 @@ This project is pre-configured for Render using the `render.yaml` blueprint.
 
 ---
 
+# 🏆 HACKBLR Bootcamp Compliance
+
+- **🛠 Mandatory Tech Stack:** This project strictly utilizes both **Qdrant** (Vector Database) and **Vapi** (Voice AI).
+- **⚡ MVP Status:** This is a fully functional MVP/project, integrating a unified Node.js/React frontend with a semantic search backend.
+- **📅 Evaluation:** Ready for mentor evaluation on **18th April**.
+
+---
+
 # 📓 Data Master Notebook
 
 ## 1. Executive Summary
@@ -121,7 +129,7 @@ Numerical data is transformed into natural language strings prior to embedding i
 
 **Sample Transformation:**
 * **Original Entry:** `Gender: 1, First_Contact: 7, SAQ_Witchcraft: 1`
-* **Semantic Summary:** *"The subject is Male. Initial clinical consultation was sought through a Traditional Healer (Ojha/Tantrik). The subject attributes psychiatric illness to supernatural causes, specifically witchcraft."*
+* **Semantic Summary:** *"The subject is Male. Initial clinical consultation was sought through a Traditional Healer. The subject attributes psychiatric illness to supernatural causes, specifically witchcraft."*
 
 ## 5. Deployment and Technical Specifications
 * **Environment:** GitHub Codespaces (FastAPI Bridge Execution).
