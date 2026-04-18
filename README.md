@@ -3,9 +3,9 @@
 ## 🌟 Overview
  The deployment to Google Cloud Run was successful, and the live application is now updated!                                                                         
                                                                                                                                                                       
-  Live Links                                                                                                                                                          
-   - Main App: https://hackblr-app-rpfcyhqwsa-uc.a.run.app (https://hackblr-app-rpfcyhqwsa-uc.a.run.app)                                                              
-   - Python API: https://hackblr-python-api-rpfcyhqwsa-uc.a.run.app (https://hackblr-python-api-rpfcyhqwsa-uc.a.run.app) 
+  Please check the live site again:                                                                                                                                                                
+  https://hackblr-app-rpfcyhqwsa-uc.a.run.app (https://hackblr-app-rpfcyhqwsa-uc.a.run.app)                                                          
+  
 
 ---
 
