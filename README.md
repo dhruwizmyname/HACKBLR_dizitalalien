@@ -1,9 +1,11 @@
 # HackBLR - Tribal Mental Health AI & Community Assistant
 
 ## 🌟 Overview
-HackBLR is a comprehensive AI-driven ecosystem designed for the **Tribal Mental Health Database** and the **Community Information Program (CIP)**. It combines voice-activated AI, semantic search, and secure workload identity to provide a robust platform for information retrieval and mental health support.
-
-**🔗 Live Web App (GCP):** [https://hackblr-app-rpfcyhqwsa-uc.a.run.app](https://hackblr-app-rpfcyhqwsa-uc.a.run.app)
+ The deployment to Google Cloud Run was successful, and the live application is now updated!                                                                         
+                                                                                                                                                                      
+  Live Links                                                                                                                                                          
+   - Main App: https://hackblr-app-rpfcyhqwsa-uc.a.run.app (https://hackblr-app-rpfcyhqwsa-uc.a.run.app)                                                              
+   - Python API: https://hackblr-python-api-rpfcyhqwsa-uc.a.run.app (https://hackblr-python-api-rpfcyhqwsa-uc.a.run.app) 
 
 ---
 
