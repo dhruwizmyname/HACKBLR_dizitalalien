@@ -63,4 +63,4 @@ bash gcloud-deploy.sh
 - **Branch:** `main`
 
 ---
-*Built with ❤️ for the HackBLR Bootcamp.*
+*Built for -Love by @dizitalalien
