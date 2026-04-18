@@ -1,11 +1,9 @@
-# HackBLR - Tribal Mental Health AI & Community Assistant
+# 🎙️ HackBLR - Tribal Mental Health AI & Community Assistant
 
-## 🌟 Overview
- The deployment to Google Cloud Run was successful, and the live application is now updated!                                                                         
-                                                                                                                                                                      
-  Please check the live site again:                                                                                                                                                                
-  https://hackblr-app-rpfcyhqwsa-uc.a.run.app (https://hackblr-app-rpfcyhqwsa-uc.a.run.app)                                                          
-  
+HackBLR is a high-performance AI ecosystem designed to bridge the digital divide for tribal populations. It combines **Real-time Voice AI**, **Semantic Vector Search**, and **Secure Workload Identity** to provide cultural-sensitive mental health support and local resource discovery.
+
+**🔗 Live Web App:** [https://hackblr-app-rpfcyhqwsa-uc.a.run.app](https://hackblr-app-rpfcyhqwsa-uc.a.run.app)
+**🔗 Semantic Search API:** [https://hackblr-python-api-rpfcyhqwsa-uc.a.run.app](https://hackblr-python-api-rpfcyhqwsa-uc.a.run.app)
 
 ---
 
@@ -13,89 +11,56 @@
 
 ### 1. Frontend: Voice-Activated Assistant (`HackBLR/`)
 A modern **React + Vite** application providing a seamless voice interface.
-- **Vapi Integration:** Uses the Vapi SDK for real-time, low-latency voice interaction.
-- **Live Transcript:** Displays real-time conversation between the user and the AI.
-- **Deployment:** Hosted on **Google Cloud Run**, served via the Node.js API.
+- **Vapi.ai Web SDK:** Real-time, low-latency conversational AI.
+- **Live Transcript:** Displays conversational feed between user and AI.
+- **Modern UI:** Glassmorphism UI with CSS voice visualizers.
 
-### 2. Node.js Search API (`HackBLR/api/`)
-An **Express.js** backend that serves as a high-speed search layer for local community resources.
-- **Local Database:** Connects to `data/mental_health_db.json` for FAQ and resource lookup.
-- **Vapi Tool Endpoint:** Configured to handle direct tool calls from the Vapi voice assistant.
-- **Deployment:** Hosted on **Google Cloud Run**.
+### 2. Semantic Search Engine (`app/`)
+A high-speed **FastAPI** service for clinical retrieval using Vector RAG.
+- **Qdrant Vector Database:** Manages high-dimensional clinical data embeddings.
+- **Vertex AI Embeddings:** Powered by Google's `text-embedding-004`.
+- **RAG Implementation:** Maps clinical codes into semantic summaries for LLM processing.
 
-### 3. Python Semantic Search API (`app/`)
-A **FastAPI** service focused on deep semantic retrieval using Vector RAG.
-- **Qdrant Backend:** Performs semantic search across the `enterprise_kb` collection.
-- **Embedding Integration:** Leverages Google Vertex AI (`text-embedding-004`) for high-accuracy patient data retrieval.
-- **Deployment:** Hosted on **Google Cloud Run**.
-
-### 4. Database: Qdrant Vector DB
-- **Deployment:** Hosted on a **Google Compute Engine (GCE)** VM (`e2-small`) with persistent storage.
-- **Access:** Accessible via `http://34.31.164.38:6333`.
-
-### 5. Security: Workload Identity & IAM
-- **GCP IAM:** Uses Service Accounts with fine-grained permissions for Vertex AI and Artifact Registry.
-- **SPIFFE/SPIRE (Optional):** Zero-trust workload identity configuration available in `spire/`.
+### 3. Integrated Resource API (`HackBLR/api/`)
+An **Express.js** backend serving community resources and local mental health data.
 
 ---
 
-## 🚀 Deployment (Google Cloud Platform)
+## 🛠️ Technology Stack
 
-The project is containerized using Docker and deployed to **Google Cloud Run**.
-
-### **Infrastructure Components**
-| Component | Service | URL |
+| Component | Technology | Use Case |
 | :--- | :--- | :--- |
-| **Main App (UI + Node)** | Cloud Run | [https://hackblr-app-rpfcyhqwsa-uc.a.run.app](https://hackblr-app-rpfcyhqwsa-uc.a.run.app) |
-| **Semantic API (Python)** | Cloud Run | [https://hackblr-python-api-rpfcyhqwsa-uc.a.run.app](https://hackblr-python-api-rpfcyhqwsa-uc.a.run.app) |
-| **Vector DB (Qdrant)** | Compute Engine | [http://34.31.164.38:6333](http://34.31.164.38:6333) |
-
-### **Deployment Scripts**
-- `gcloud-setup-db.sh`: Automates GCE VM creation, firewall rules, and Qdrant container startup.
-- `gcloud-deploy.sh`: Builds Docker images and deploys services to Cloud Run.
-
-#### **Required Environment Variables**
-- **Python API:** `QDRANT_URL`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`.
-- **Node API:** `PYTHON_API_URL`, `VITE_VAPI_PUBLIC_KEY`, `VITE_VAPI_ASSISTANT_ID`.
-
----
-
-## 🛠️ Development Setup
-
-1. **Install Dependencies:**
-   ```bash
-   # Install Node.js dependencies
-   cd HackBLR && npm install
-
-   # Install Python dependencies (from root)
-   pip install -r requirements.txt
-   ```
-
-2. **Start the Services Locally:**
-
-   - **Option A: Run Frontend (Vite Dev Mode)**
-     ```bash
-     cd HackBLR
-     npm run dev
-     ```
-
-   - **Option B: Run Node.js API (Backend)**
-     ```bash
-     cd HackBLR
-     npm start
-     ```
-
-   - **Option C: Run Python Semantic API**
-     ```bash
-     uvicorn app.main:app --reload
-     ```
-
-3. **Verify Vector Search:**
-   ```bash
-   python check_qdrant.py
-   ```
+| **Voice AI** | [Vapi.ai](https://vapi.ai) | Conversational Agent & STT/TTS Pipeline |
+| **Vector DB** | [Qdrant](https://qdrant.tech) | Storing and Querying Clinical Embeddings |
+| **LLM/Embeddings** | [Google Vertex AI](https://cloud.google.com/vertex-ai) | Generating semantic vector representations |
+| **Compute** | [Google Cloud Run](https://cloud.google.com/run) | Serverless Hosting for APIs and Frontend |
+| **Cloud DB** | [Google Compute Engine](https://cloud.google.com/compute) | Hosting Persistent Qdrant Instance |
+| **Backend (Python)** | FastAPI | Semantic Search & RAG Orchestration |
+| **Backend (Node)** | Express.js | Static serving & Resource lookup |
+| **Frontend** | React + Vite | User Interface & Vapi SDK Integration |
+| **Security** | SPIFFE/SPIRE | Zero-trust workload identity (Optional) |
+| **Infrastructure** | Docker | Containerization of all services |
 
 ---
 
-## 📊 Data Normalization (Latest: April 15, 2026)
-We maintain a strict 85-column normalization process for all Community Information Program datasets to ensure consistency across AI models and retrieval systems.
+## 🚀 Deployment
+
+The project is fully automated for Google Cloud Platform.
+
+```bash
+# Set your project ID
+gcloud config set project hackblr-493411
+
+# Run the deployment script
+bash gcloud-deploy.sh
+```
+
+---
+
+## 🏆 HackBLR Bootcamp MVP
+- **Mandatory Tech:** Strictly uses **Qdrant** and **Vapi**.
+- **Security:** No API keys are committed; all configuration uses environment variables.
+- **Branch:** `main`
+
+---
+*Built with ❤️ for the HackBLR Bootcamp.*
