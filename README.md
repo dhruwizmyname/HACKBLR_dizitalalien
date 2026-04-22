@@ -43,24 +43,35 @@ An **Express.js** backend serving community resources and local mental health da
 
 ---
 
-## 🚀 Deployment
+## 🚀 Deployment & Setup
 
-The project is fully automated for Google Cloud Platform.
+The project is configured for Google Cloud Project: `hackblr-493411`.
 
-```bash
-# Set your project ID
-gcloud config set project hackblr-493411
+### 1. Local Environment Configuration
+Your `.env` file and scripts are already set up:
+- **Project ID:** `hackblr-493411`
+- **Location:** `us-central1`
+- **Qdrant:** Local instance running on `http://localhost:6333` (Collection: `Raw_Data`)
+- **Credentials:** Verified via `gcloud` and Service Account JSON.
 
-# Run the deployment script
-bash gcloud-deploy.sh
-```
+### 2. Verified Status
+- ✅ **Authentication:** Python scripts successfully authenticate with GCP.
+- ✅ **Vector DB:** Qdrant connection is active with 200 patient records injected.
+- ✅ **APIs Enabled:** `aiplatform.googleapis.com` and `generativelanguage.googleapis.com` are enabled via CLI.
+
+### 3. Final Step (Manual Action Required)
+Before running the full application, you must "activate" the Gemini models in the console:
+1. Go to the [Vertex AI Model Garden](https://console.cloud.google.com/vertex-ai/model-garden).
+2. Search for **Gemini 1.5 Pro**.
+3. Click on the model and ensure you have accepted the Terms of Service.
+4. Test a prompt in the "Language" console to verify that the `404: Model Not Found` error is resolved.
 
 ---
 
 ## 🏆 HackBLR Bootcamp MVP
+- **Status:** **Paused** - Backend and DB are ready; awaiting Model Activation in GCP.
 - **Mandatory Tech:** Strictly uses **Qdrant** and **Vapi**.
-- **Security:** No API keys are committed; all configuration uses environment variables.
-- **Branch:** `main`
+- **Branch:** `HACKBLR_dizitalalien_v4`
 
 ---
 *Built for -Love by @dizitalalien
