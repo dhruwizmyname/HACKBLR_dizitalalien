@@ -2,8 +2,6 @@
 
 HackBLR is a high-performance AI ecosystem designed to bridge the digital divide for tribal populations. It combines **Real-time Voice AI**, **Semantic Vector Search**, and **Secure Workload Identity** to provide cultural-sensitive mental health support and local resource discovery.
 
-# 🎙️ HackBLR - Tribal Mental Health AI & Community Assistant
-
 > [!CAUTION]
 > **Project Status: Archived / Offline** > The live cloud deployments (Cloud Run & Compute Engine) have been taken down to minimize infrastructure costs. As this project is a non-commercial MVP/Bootcamp prototype, the live URLs are no longer active.
 
