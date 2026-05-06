@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import VapiWeb from '@vapi-ai/web'
+import heroImage from './assets/hero.png'
 import './App.css'
 
 // Handle case where Vapi might be exported as .default or the module itself
@@ -77,6 +78,9 @@ function App() {
   return (
     <div className="app-wrapper">
       <header className="app-header">
+        <div className="hero-container">
+          <img src={heroImage} alt="HackBLR Hero" className="hero-img" />
+        </div>
         <div className="logo-section">
           <span className="icon-pulse">🎙️</span>
           <h1>Tribal Support AI</h1>

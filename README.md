@@ -43,35 +43,55 @@ An **Express.js** backend serving community resources and local mental health da
 
 ---
 
-## 🚀 Deployment & Setup
+## 🚀 Local Deployment & Setup
 
-The project is configured for Google Cloud Project: `hackblr-493411`.
+### 1. Prerequisites
+- **Docker:** Required for running the Qdrant Vector Database.
+- **Python 3.10+:** For the Semantic Search API.
+- **Node.js 20+:** For the Frontend and Resource API.
 
-### 1. Local Environment Configuration
-Your `.env` file and scripts are already set up:
-- **Project ID:** `hackblr-493411`
-- **Location:** `us-central1`
-- **Qdrant:** Local instance running on `http://localhost:6333` (Collection: `Raw_Data`)
-- **Credentials:** Verified via `gcloud` and Service Account JSON.
+### 2. Startup Procedure
 
-### 2. Verified Status
-- ✅ **Authentication:** Python scripts successfully authenticate with GCP.
-- ✅ **Vector DB:** Qdrant connection is active with 200 patient records injected.
-- ✅ **APIs Enabled:** `aiplatform.googleapis.com` and `generativelanguage.googleapis.com` are enabled via CLI.
+#### Step A: Start Qdrant (Vector Database)
+```bash
+docker run -d -p 6333:6333 -p 6334:6334 qdrant/qdrant
+```
 
-### 3. Final Step (Manual Action Required)
-Before running the full application, you must "activate" the Gemini models in the console:
-1. Go to the [Vertex AI Model Garden](https://console.cloud.google.com/vertex-ai/model-garden).
-2. Search for **Gemini 1.5 Pro**.
-3. Click on the model and ensure you have accepted the Terms of Service.
-4. Test a prompt in the "Language" console to verify that the `404: Model Not Found` error is resolved.
+#### Step B: Inject Clinical Data
+Ensure your `.env` has the correct `GOOGLE_API_KEY` (from Google AI Studio) and run:
+```bash
+python local_data_injector.py
+```
+*Note: This uses local embeddings (384-dim) for cost-efficiency and speed.*
+
+#### Step C: Start Semantic Search API (Python)
+```bash
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+#### Step D: Start Frontend & Resource API (Node.js)
+```bash
+cd HackBLR
+npm install
+npm run backend  # Starts Express server on port 3001
+npm run dev      # Starts Vite Frontend on port 5173
+```
 
 ---
 
-## 🏆 HackBLR Bootcamp MVP
-- **Status:** **Paused** - Backend and DB are ready; awaiting Model Activation in GCP.
-- **Mandatory Tech:** Strictly uses **Qdrant** and **Vapi**.
-- **Branch:** `HACKBLR_dizitalalien_v4`
+## 🛠️ Asset Management (React)
+To prevent **404 Not Found** errors, always import assets directly in your components:
+```javascript
+import heroImage from './assets/hero.png';
+// Use as: <img src={heroImage} />
+```
+
+---
+
+## 🏆 Current Status
+- ✅ **Local RAG:** Fully functional using Qdrant + SentenceTransformers.
+- ✅ **Frontend:** Modernized React + Vite UI with proper asset bundling.
+- ⚠️ **LLM:** Currently using Gemini 1.5 via Google AI Studio (requires valid `GOOGLE_API_KEY`).
 
 ---
 *Built for -Love by @dizitalalien

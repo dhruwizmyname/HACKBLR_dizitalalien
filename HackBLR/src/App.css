@@ -34,6 +34,18 @@ body {
   padding-top: 2rem;
 }
 
+.hero-container {
+  margin-bottom: 1.5rem;
+}
+
+.hero-img {
+  width: 120px;
+  height: auto;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(170, 59, 255, 0.4);
+  border: 2px solid var(--primary);
+}
+
 .logo-section {
   display: flex;
   align-items: center;
