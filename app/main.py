@@ -45,7 +45,7 @@ def get_llm_client() -> ChatGoogleGenerativeAI:
     if not GOOGLE_API_KEY:
         raise RuntimeError("GOOGLE_API_KEY is missing. Please add it to your .env file.")
     # Using the standard free API tier, bypassing GCP enterprise permissions
-    return ChatGoogleGenerativeAI(model="gemini-1.5-pro", google_api_key=GOOGLE_API_KEY, temperature=0.2)
+    return ChatGoogleGenerativeAI(model="gemini-flash-latest", google_api_key=GOOGLE_API_KEY, temperature=0.2)
 
 def extract_text_from_payload(obj: Any) -> Optional[str]:
     priority_keys = ("message", "input", "transcript", "text", "query", "prompt", "utterance")
@@ -64,11 +64,11 @@ def retrieve_context(user_text: str) -> List[str]:
         query_vec = embedding_model.encode(user_text).tolist()
         
         # Search Qdrant (Note: Ensure your collection is now 384 dimensions)
-        hits = qdrant.search(
+        hits = qdrant.query_points(
             collection_name=QDRANT_COLLECTION, 
-            query_vector=query_vec, 
+            query=query_vec, 
             limit=QDRANT_TOP_K
-        )
+        ).points
         results = [hit.payload.get("text", "") for hit in hits if hit.payload]
         logger.info(f"Retrieved {len(results)} context chunks from Qdrant.")
         for i, res in enumerate(results):
